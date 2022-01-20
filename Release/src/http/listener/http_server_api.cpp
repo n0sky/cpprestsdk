@@ -76,7 +76,7 @@ pplx::task<void> http_server_api::register_listener(
 #if defined(_WIN32) && !defined(CPPREST_FORCE_HTTP_LISTENER_ASIO)
             auto server_api = make_http_httpsys_server();
 #else
-            auto server_api = make_http_asio_server();
+            auto server_api = make_http_asio_server(); // 使用ASIO SERVER
 #endif
             http_server_api::unsafe_register_server_api(std::move(server_api));
 
@@ -93,7 +93,7 @@ pplx::task<void> http_server_api::register_listener(
             }
 
             // register listener
-            s_server_api->register_listener(listener).wait();
+            s_server_api->register_listener(listener).wait(); // http_server --> http_linux_server
         }
         catch (...)
         {

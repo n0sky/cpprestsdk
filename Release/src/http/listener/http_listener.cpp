@@ -73,7 +73,7 @@ pplx::task<void> details::http_listener_impl::open()
 
     if (m_uri.is_empty()) throw std::invalid_argument("No URI defined for listener.");
     m_closed = false;
-
+    // register entrance
     return web::http::experimental::details::http_server_api::register_listener(this).then(
         [this](pplx::task<void> openOp) {
             try

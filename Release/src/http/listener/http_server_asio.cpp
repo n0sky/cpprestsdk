@@ -517,7 +517,7 @@ void hostport_listener::internal_erase_connection(asio_server_connection* conn)
 void hostport_listener::start()
 {
     // resolve the endpoint address
-    auto& service = crossplat::threadpool::shared_instance().service();
+    auto& service = crossplat::threadpool::shared_instance().service(); // multithread
     tcp::resolver resolver(service);
     // #446: boost resolver does not recognize "+" as a host wildchar
     tcp::resolver::query query =
@@ -621,7 +621,7 @@ void hostport_listener::on_accept(std::unique_ptr<ip::tcp::socket> socket, const
     if (m_acceptor)
     {
         // spin off another async accept
-        auto newSocket = new ip::tcp::socket(crossplat::threadpool::shared_instance().service());
+        auto newSocket = new ip::tcp::socket(crossplat::threadpool::shared_instance().service()); // multithread
         std::unique_ptr<ip::tcp::socket> usocket(newSocket);
         m_acceptor->async_accept(*newSocket, [this, newSocket](const boost::system::error_code& ec) {
             std::unique_ptr<ip::tcp::socket> usocket(newSocket);
@@ -1279,7 +1279,7 @@ pplx::task<void> http_linux_server::start()
     {
         for (; it != m_listeners.end(); ++it)
         {
-            it->second->start();
+            it->second->start(); //
         }
     }
     catch (...)
@@ -1326,7 +1326,7 @@ std::pair<std::string, std::string> canonical_parts(const uri& uri)
 
     return std::make_pair(std::move(endpoint), std::move(path));
 }
-
+// http_server --> http_linux_server
 pplx::task<void> http_linux_server::register_listener(http_listener_impl* listener)
 {
     auto parts = canonical_parts(listener->uri());
@@ -1357,7 +1357,7 @@ pplx::task<void> http_linux_server::register_listener(http_listener_impl* listen
 
                 if (m_started)
                 {
-                    found_hostport_listener->second->start();
+                    found_hostport_listener->second->start(); // multithread start
                 }
             }
 

@@ -22,7 +22,7 @@ public:
     BlackJackDealer() {}
     BlackJackDealer(utility::string_t url);
 
-    pplx::task<void> open() { return m_listener.open(); }
+    pplx::task<void> open() { return m_listener.open(); } // entrance
     pplx::task<void> close() { return m_listener.close(); }
 
 private:
