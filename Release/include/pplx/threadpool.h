@@ -75,6 +75,7 @@ public:
     boost::asio::io_service& service() { return m_service; }
 
 protected:
+    // Concurrency Hints的参数，这个参数会影响io_context的并发特性
     threadpool(size_t num_threads) : m_service(static_cast<int>(num_threads)) {}
 
     boost::asio::io_service m_service;

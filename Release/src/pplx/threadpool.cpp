@@ -37,6 +37,7 @@ static void abort_if_no_jvm()
 
 struct threadpool_impl final : crossplat::threadpool
 {
+    // threadpool
     threadpool_impl(size_t n) : crossplat::threadpool(n), m_work(m_service)
     {
         for (size_t i = 0; i < n; i++)
@@ -60,6 +61,7 @@ struct threadpool_impl final : crossplat::threadpool
 private:
     void add_thread()
     {
+        // new thread to run m_service
         m_threads.push_back(
             std::unique_ptr<boost::asio::detail::thread>(new boost::asio::detail::thread([&] { thread_start(this); })));
     }
@@ -168,6 +170,7 @@ struct uninitialized
 
 std::pair<bool, platform_shared_threadpool*> initialize_shared_threadpool(size_t num_threads)
 {
+    // using threadpool_impl = platform_shared_threadpool as template
     static uninitialized<platform_shared_threadpool> uninit_threadpool;
     bool initialized_this_time = false;
     static std::once_flag of;
